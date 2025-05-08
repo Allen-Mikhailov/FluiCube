@@ -45,7 +45,6 @@ static void SPI_Controller_writeReg(
 static void SPI_Controller_readReg(uint8_t readCmd, uint8_t count);
 
 
-uint16_t allLights[] =  {0x0, 0x0, 0xE2F0, 0x1010, 0xE210, 0x10F0, 0xE210, 0xF010, 0xE210, 0x0010, 0xFFFF, 0xFFFF};
 uint16_t *currentStateSPIData;
 
 int transmissionComplete = 0;
@@ -65,8 +64,7 @@ typedef struct {
 
 ACCEL currentAccel;
 
-float gravity[3];
-
+// Gets the legnth of a vector of floats
 float get_hypot(float * values, int count)
 {
     float value = 0;
@@ -77,6 +75,7 @@ float get_hypot(float * values, int count)
     return sqrtf(value);
 }
 
+// Normalizes a vector of floats
 void normalize_float_array(float * array, int size)
 {
     float hypot = get_hypot(array, size);
@@ -86,31 +85,25 @@ void normalize_float_array(float * array, int size)
     }
 }
 
-float dot_product(float * v1, float* v2, int size)
-{
-    float val = 0;
-    for (int i = 0; i < size; i++)
-        val += v1[i]*v2[i];
-    return val;
-}
+const float dt = 1.0 / 30.0; // delta time for each simulation step
+const float gravity_multi = ( 1.0 / 500.0 ); // used to convert raw accelerometer data into simulation gravity
 
-
-const float dt = 1.0 / 30.0;
-const float gravity_multi = ( 1.0 / 500.0 );
-
-const int pixel_buffer_face = 8*8;
-const int led_grid_face = 10*10;
+const int pixel_buffer_face = 8*8; // How many pixels on each face
+const int led_grid_face = 10*10; // How many pixels on each simulation face (+1 padding on each side)
 
 void fill_pixel_buffer()
 {
     float *pixel_buffer_head = pixel_buffer;
+	// Looping through every face
     for (int i = 0; i < 6; i++)
     {
+		// Looping through every pixel on each face
         for (int y = 0; y < 8; y++)
         {
             int odd = (y & 0x1) == 1;
             for (int x = 0; x < 8; x++)
             {
+				// face_start + y_offset + odd/even alternating order
                 *pixel_buffer_head = led_grid[led_grid_face * i + y*10 + 10 + odd * (9-x) + (!odd) * (x+1)];
                 pixel_buffer_head++;
             }
@@ -120,6 +113,7 @@ void fill_pixel_buffer()
 
 int main(void)
 {
+	// Initialize Low level systems
     InitializeProcessor();
     InitializeGPIO();
     Initialize_LED_SPI();
@@ -135,6 +129,7 @@ int main(void)
     uint8_t enableCmd = 0x3F; // The value to enable all axes of the accelerometer with 100 Hz sampling
     SPI_Controller_writeReg(0x20, &enableCmd, 1); // The address of the CTRL1 reg is 0x20
 
+	// Initialize the simulation
     initialize_particles();
 
     /* Toggle LEDs*/
@@ -147,21 +142,27 @@ int main(void)
         CopyArray(gRxBuffer, (uint8_t *)&currentAccel, 6); // Copy into a type cast struct
                                                            // This works because uint16_t x,y,z
                                                            // are little endian!!!
+		// Switching to simulation cordinates
         float ax = (float) -currentAccel.x * gravity_multi;
         float ay = (float) -currentAccel.z * gravity_multi;
         float az = (float) currentAccel.y * gravity_multi;
 
+		// Swap due to weird orientation of the board in the device
         float rx = -az;
         float ry = ax;
         float rz = ay;
 
-//        __BKPT();
 
+		// One simulation step 
         tick_particles(dt, 50, rx, ry, rz);
+
+		// Move leds on simulation to actual order needed for SPI
         fill_pixel_buffer();
 		
-
+		// Updating the lights
         update_neopixel_lights();
+
+		// Small pause
         delay_cycles(1600000);
 
     }

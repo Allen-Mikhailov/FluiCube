@@ -4,7 +4,7 @@ import { TransformControls } from 'three/addons/controls/TransformControls.js';
 import {GUI} from 'three/addons/libs/lil-gui.module.min.js';
 import createModule from "../wasm/main.js";
 
-const particle_count = 30;
+const particle_count = 20;
 const box_size = 4;
 
 const pixel_count = 8;
@@ -182,7 +182,16 @@ LeftGrid.group.rotateY(-Math.PI/2);
 cube_group.add(LeftGrid.group);
 
 
-
+function resizeRendererToDisplaySize(renderer) {
+  const canvas = renderer.domElement;
+  const width = canvas.clientWidth;
+  const height = canvas.clientHeight;
+  const needResize = canvas.width !== width || canvas.height !== height;
+  if (needResize) {
+    renderer.setSize(width, height, false);
+  }
+  return needResize;
+}
 
 
 async function main() {
@@ -212,21 +221,25 @@ async function main() {
 	const button5 = gui.add({ action: () => console.log(pixel_buffer)}, 'action').name('Print Pixels');
 
 	function animate() {
+		// Getting the direction of gravity
 		const down = localDown.clone();
 		down.applyQuaternion(cube_group.quaternion.clone().invert()).setLength(settings.gravity);
 
+		// Updating the simulation
 		tick_particles(1/60, settings.r_force, down.x, down.y, down.z); 
 
 		const positions = line_geometry.attributes.position.array;
 
 		for (let i = 0; i < particle_count; i++)
 		{
+			// Setting particle position
 			particles[i].position.set(
 				particle_positions[i*3+0],
 				particle_positions[i*3+1],
 				particle_positions[i*3+2]
 			)	
 
+			// Drawing the velocity line
 			positions[i*6+0] = particle_positions[i*3+0];
 			positions[i*6+1] = particle_positions[i*3+1];
 			positions[i*6+2] = particle_positions[i*3+2];
@@ -245,6 +258,7 @@ async function main() {
 
 		line_geometry.attributes.position.needsUpdate = true;
 
+		// Control Modes
 		if (control_mode == "orbit")
 		{
 			orbit.update();
@@ -253,12 +267,18 @@ async function main() {
 		}
 
 
+		// Updating the grid
 		FrontGrid.set_pixels(pixel_buffer, 0)
 		TopGrid.set_pixels(pixel_buffer, 10*10)
 		RightGrid.set_pixels(pixel_buffer, 10*10 * 2)
 		BottomGrid.set_pixels(pixel_buffer, 10*10 * 3)
 		BackGrid.set_pixels(pixel_buffer, 10*10 * 4)
 		LeftGrid.set_pixels(pixel_buffer, 10*10 * 5)
+
+		if (resizeRendererToDisplaySize(renderer)) {
+			camera.aspect = canvas.clientWidth / canvas.clientHeight;
+			camera.updateProjectionMatrix();
+		}
 
 		renderer.render( scene, camera );
 

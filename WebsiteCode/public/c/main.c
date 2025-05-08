@@ -11,7 +11,7 @@
 #define RAW_GRID_SIZE_2 (RAW_GRID_SIZE*RAW_GRID_SIZE)
 #define RAW_GRID_POINTS (RAW_GRID_SIZE_2*6)
 
-#define particle_count 30 
+#define particle_count 20 
 #define PARTICLE_DAMPENING 0.95
 const float particle_size = 1;
 const float push_force = 1;

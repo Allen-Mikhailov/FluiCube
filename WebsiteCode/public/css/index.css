@@ -1,4 +1,50 @@
 body {
 	margin: 0px;
 	background: black;
+
+	font-family: "Roboto", sans-serif;
+	font-optical-sizing: auto;
+	font-weight: 100;
+	font-style: normal;
+	font-variation-settings: "wdth" 300;
+
+	color: white;
+
+	position: relative;
+}
+
+.web-title {
+	padding-top: 5vh;
+	font-size: 5vw;
+	color: white;
+	text-align: center;
+}
+
+a {
+	color: white;
+}
+
+.web-text {
+	padding-top: 50px;
+}
+
+.love-tag {
+	color: white;
+	position: absolute;
+	left 0%;
+	bottom 0%;
+
+	a {
+	}
+}
+
+.display {
+	padding-top: 20px;
+	font-size: 120%;
+}
+
+.main-stuff {
+	position: absolute;
+	left: 20vw;
+	width: 60vw;
 }

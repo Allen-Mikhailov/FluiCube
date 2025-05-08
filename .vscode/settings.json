@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        ".prettierrc": "javascript",
+        "simon_random.h": "c"
+    }
+}

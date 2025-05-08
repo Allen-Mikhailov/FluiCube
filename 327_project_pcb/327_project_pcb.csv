@@ -1,0 +1,13 @@
+"Id";"Designator";"Footprint";"Quantity";"Designation";"Supplier and ref";
+1;"R1";"R_0805_2012Metric_Pad1.20x1.40mm_HandSolder";1;"R";;;
+2;"J4";"PinHeader_1x03_P2.54mm_Vertical";1;"Conn_01x03";;;
+3;"J3,J1";"PinHeader_1x02_P2.54mm_Vertical";2;"Conn_01x02";;;
+4;"J2";"PinHeader_1x05_P2.54mm_Horizontal";1;"Conn_01x05";;;
+5;"IC1";"SOP50P490X110-28N";1;"M0G3507QDGS28RQ1";;;
+6;"C6";"CP_Radial_D4.0mm_P2.00mm";1;"2.2 uF";;;
+7;"C5";"CP_Radial_D4.0mm_P2.00mm";1;"0.1 uF";;;
+8;"C4";"CP_Radial_D5.0mm_P2.50mm";1;"10 nF";;;
+9;"C3";"C_0805_2012Metric_Pad1.18x1.45mm_HandSolder";1;"0.1 uF";;;
+10;"C2";"C_1210_3225Metric_Pad1.33x2.70mm_HandSolder";1;"10 uF";;;
+11;"C1";"C_0805_2012Metric_Pad1.18x1.45mm_HandSolder";1;"10 nF";;;
+12;"AC1";"IIM42352";1;"ICM-40627";;;

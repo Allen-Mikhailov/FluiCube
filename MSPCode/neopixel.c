@@ -21,9 +21,9 @@ int pixel_repeat = 0;
 int pixel_n_repeats = 8*8*5;
 
 // Actual data buffer for pixel brightness
-float r_pixel_buffer[8*8*6];
-float g_pixel_buffer[8*8*6];
-float b_pixel_buffer[8*8*6];
+uint8_t r_pixel_buffer[8*8*6];
+uint8_t g_pixel_buffer[8*8*6];
+uint8_t b_pixel_buffer[8*8*6];
 
 #define MIN(a,b) (((a)<(b))?(a):(b))
 #define MAX(a,b) (((a)>(b))?(a):(b))
@@ -41,13 +41,8 @@ void convert_to_spi_byte(uint8_t byte, uint8_t *target)
 
 
 // Sets the values in the pixelTxPacket to display the rgb color
-void setNextLight(float r, float g, float b)
+void setNextLight(uint8_t r_byte, uint8_t g_byte, uint8_t b_byte)
 {
-	// Converting to a byte
-    uint8_t r_byte = (int) (r * 255);
-    uint8_t g_byte = (int) (g * 255);
-    uint8_t b_byte = (int) (b * 255);
-
 	// Setting the color values
     convert_to_spi_byte(g_byte, pixelTxPacket);
     convert_to_spi_byte(r_byte, pixelTxPacket + 3);
@@ -82,9 +77,9 @@ void SPI0_IRQHandler(void)
 				
 				// Setting only the blue color off the led and capping its max values because the buffer can go above 1
                 setNextLight(
-                  MIN(r_pixel_buffer[pixel_repeat] * 0.5, 1), 
-                  MIN(g_pixel_buffer[pixel_repeat] * 0.5, 1),
-                  MIN(b_pixel_buffer[pixel_repeat] * 0.5, 1)
+                        r_pixel_buffer[pixel_repeat],
+                        g_pixel_buffer[pixel_repeat],
+                        b_pixel_buffer[pixel_repeat]
                 );
 
                 if (pixel_repeat == pixel_n_repeats) {

@@ -9,6 +9,9 @@
 /* Dummy data sent when receiving data from SPI Peripheral */
 #define DUMMY_DATA (0x00)
 
+#define MIN(a,b) (((a)<(b))?(a):(b))
+#define MAX(a,b) (((a)>(b))?(a):(b))
+
 /* State machine to keep track of the current SPI Controller mode */
 typedef enum SPI_ControllerModeEnum {
     IDLE_MODE,
@@ -49,7 +52,7 @@ uint16_t *currentStateSPIData;
 
 int transmissionComplete = 0;
 int idx = 0;
-int message_len = sizeof(allLights) / sizeof(allLights[0]);
+//int message_len = sizeof(allLights) / sizeof(allLights[0]);
 
 
 uint8_t gCmdReadType1Buffer[1] = {0};
@@ -91,7 +94,7 @@ const float gravity_multi = ( 1.0 / 500.0 ); // used to convert raw acceleromete
 const int pixel_buffer_face = 8*8; // How many pixels on each face
 const int led_grid_face = 10*10; // How many pixels on each simulation face (+1 padding on each side)
 
-void fill_pixel_buffer(float *pixel_buffer_head, float *led_grid)
+void fill_pixel_buffer(uint8_t *pixel_buffer_head, float *led_grid)
 {
 	// Looping through every face
     for (int i = 0; i < 6; i++)
@@ -103,7 +106,8 @@ void fill_pixel_buffer(float *pixel_buffer_head, float *led_grid)
             for (int x = 0; x < 8; x++)
             {
 				// face_start + y_offset + odd/even alternating order
-                *pixel_buffer_head = led_grid[led_grid_face * i + y*10 + 10 + odd * (9-x) + (!odd) * (x+1)];
+                float value = led_grid[led_grid_face * i + y*10 + 10 + odd * (9-x) + (!odd) * (x+1)];
+                *pixel_buffer_head = MIN((uint8_t) (value * 128.0), 128);
                 pixel_buffer_head++;
             }
         }

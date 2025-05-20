@@ -62,7 +62,12 @@ float led_weights[9] = {0.11, 0.11,0.11,0.11,0.11,0.11,0.11,0.11,0.11};
 void clear_led_grid()
 {
 	for (int i = 0; i < RAW_GRID_POINTS; i++)
-		led_grid[i] = 0;
+	{
+	    r_led_grid[i] = 0;
+	    g_led_grid[i] = 0;
+	    b_led_grid[i] = 0;
+	}
+
 }
 
 // Outputs a random number between 0.0-1.0
@@ -233,11 +238,11 @@ void tick_particles(float dt, float r_force, float gx, float gy, float gz)
         break;
     }
 
-    float *top_grid    = front_grid + RAW_GRID_POINTS * 1;
-    float *right_grid  = front_grid + RAW_GRID_POINTS * 2;
-    float *left_grid   = front_grid + RAW_GRID_POINTS * 3;
-    float *bottom_grid = front_grid + RAW_GRID_POINTS * 4;
-    float *back_grid   = front_grid + RAW_GRID_POINTS * 5;
+    float *top_grid    = front_grid + RAW_GRID_SIZE_2;
+    float *right_grid  = top_grid + RAW_GRID_SIZE_2;
+    float *left_grid   = right_grid + RAW_GRID_SIZE_2;
+    float *bottom_grid = left_grid + RAW_GRID_SIZE_2;
+    float *back_grid   = bottom_grid + RAW_GRID_SIZE_2;
 
 		// Looping through the 3x3 Grid
 		for (int j = 0; j < 9; j++)

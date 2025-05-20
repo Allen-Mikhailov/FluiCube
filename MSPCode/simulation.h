@@ -12,7 +12,9 @@
 #define particle_count 30 
 #define PARTICLE_DAMPENING 0.95
 
-extern float led_grid[RAW_GRID_POINTS];
+extern float r_led_grid[RAW_GRID_POINTS];
+extern float g_led_grid[RAW_GRID_POINTS];
+extern float b_led_grid[RAW_GRID_POINTS];
 
 void tick_particles(float dt, float r_force, float gx, float gy, float gz);
 void initialize_particles();

@@ -37,14 +37,9 @@ float particle_velocities[particle_count*3];
 
 float particle_accelerations[particle_count*3];
 
-float led_grid[RAW_GRID_POINTS];
-
-float *front_grid;
-float *top_grid;
-float *right_grid;
-float *bottom_grid;
-float *back_grid;
-float *left_grid;
+float r_led_grid[RAW_GRID_POINTS];
+float g_led_grid[RAW_GRID_POINTS];
+float b_led_grid[RAW_GRID_POINTS];
 
 // The offsets of positions the leds 
 // X, Y
@@ -79,12 +74,6 @@ float random1()
 void initialize_particles()
 {
 	// Shortcuts for grid faces in the array
-	front_grid = led_grid;
-	top_grid = led_grid      + RAW_GRID_SIZE_2;
-	right_grid = top_grid    + RAW_GRID_SIZE_2;
-	bottom_grid = right_grid + RAW_GRID_SIZE_2;
-	back_grid = bottom_grid  + RAW_GRID_SIZE_2;
-	left_grid = back_grid    + RAW_GRID_SIZE_2;
 
 	// Seed does not matter or need to be unique
 	srand(1234);
@@ -228,6 +217,27 @@ void tick_particles(float dt, float r_force, float gx, float gy, float gz)
 		float x_value = (box_padding+particle_positions[ix]) * (0.5 * box_size_i);
 		float y_value = (box_padding+particle_positions[iy]) * (0.5 * box_size_i);
 		float z_value = (box_padding+particle_positions[iz]) * (0.5 * box_size_i);
+
+    float *front_grid;
+
+    switch(i%3)
+    {
+      case 0:
+        front_grid = r_led_grid;
+        break;
+      case 1:
+        front_grid = g_led_grid;
+        break;
+      case 2:
+        front_grid = b_led_grid;
+        break;
+    }
+
+    float *top_grid    = front_grid + RAW_GRID_POINTS * 1;
+    float *right_grid  = front_grid + RAW_GRID_POINTS * 2;
+    float *left_grid   = front_grid + RAW_GRID_POINTS * 3;
+    float *bottom_grid = front_grid + RAW_GRID_POINTS * 4;
+    float *back_grid   = front_grid + RAW_GRID_POINTS * 5;
 
 		// Looping through the 3x3 Grid
 		for (int j = 0; j < 9; j++)

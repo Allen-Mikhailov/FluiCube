@@ -91,9 +91,8 @@ const float gravity_multi = ( 1.0 / 500.0 ); // used to convert raw acceleromete
 const int pixel_buffer_face = 8*8; // How many pixels on each face
 const int led_grid_face = 10*10; // How many pixels on each simulation face (+1 padding on each side)
 
-void fill_pixel_buffer()
+void fill_pixel_buffer(float *pixel_buffer_head, float *led_grid)
 {
-    float *pixel_buffer_head = pixel_buffer;
 	// Looping through every face
     for (int i = 0; i < 6; i++)
     {
@@ -157,7 +156,9 @@ int main(void)
         tick_particles(dt, 50, rx, ry, rz);
 
 		// Move leds on simulation to actual order needed for SPI
-        fill_pixel_buffer();
+        fill_pixel_buffer(r_pixel_buffer, r_led_grid);
+        fill_pixel_buffer(g_pixel_buffer, g_led_grid);
+        fill_pixel_buffer(b_pixel_buffer, b_led_grid);
 		
 		// Updating the lights
         update_neopixel_lights();

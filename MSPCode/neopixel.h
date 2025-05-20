@@ -6,5 +6,7 @@ void setNextLight(float r, float g, float b);
 void update_neopixel_lights();
 void SPI_1_INST_IRQHandler(void);
 
-extern float pixel_buffer[8*8*6];
+extern float r_pixel_buffer[8*8*6];
+extern float g_pixel_buffer[8*8*6];
+extern float b_pixel_buffer[8*8*6];
 #endif

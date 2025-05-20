@@ -21,7 +21,9 @@ int pixel_repeat = 0;
 int pixel_n_repeats = 8*8*5;
 
 // Actual data buffer for pixel brightness
-float pixel_buffer[8*8*6];
+float r_pixel_buffer[8*8*6];
+float g_pixel_buffer[8*8*6];
+float b_pixel_buffer[8*8*6];
 
 #define MIN(a,b) (((a)<(b))?(a):(b))
 #define MAX(a,b) (((a)>(b))?(a):(b))
@@ -79,7 +81,11 @@ void SPI0_IRQHandler(void)
                 pixel_repeat++;
 				
 				// Setting only the blue color off the led and capping its max values because the buffer can go above 1
-                setNextLight(0, 0, MIN(pixel_buffer[pixel_repeat] * 0.5, 1));
+                setNextLight(
+                  MIN(r_pixel_buffer[pixel_repeat] * 0.5, 1), 
+                  MIN(g_pixel_buffer[pixel_repeat] * 0.5, 1),
+                  MIN(b_pixel_buffer[pixel_repeat] * 0.5, 1)
+                );
 
                 if (pixel_repeat == pixel_n_repeats) {
                     pixel_transmissionComplete = 1;

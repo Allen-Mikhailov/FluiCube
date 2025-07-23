@@ -223,26 +223,38 @@ void tick_particles(float dt, float r_force, float gx, float gy, float gz)
 		float y_value = (box_padding+particle_positions[iy]) * (0.5 * box_size_i);
 		float z_value = (box_padding+particle_positions[iz]) * (0.5 * box_size_i);
 
-    float *front_grid;
+		float *front_grid = b_led_grid;
 
-    switch(i%3)
-    {
-      case 0:
-        front_grid = r_led_grid;
-        break;
-      case 1:
-        front_grid = g_led_grid;
-        break;
-      case 2:
-        front_grid = b_led_grid;
-        break;
-    }
+//    switch(i%3)
+//    {
+//      case 0:
+//        front_grid = r_led_grid;
+//        break;
+//      case 1:
+//        front_grid = g_led_grid;
+//        break;
+//      case 2:
+//        front_grid = b_led_grid;
+//        break;
+//    }
 
     float *top_grid    = front_grid + RAW_GRID_SIZE_2;
     float *right_grid  = top_grid + RAW_GRID_SIZE_2;
-    float *left_grid   = right_grid + RAW_GRID_SIZE_2;
-    float *bottom_grid = left_grid + RAW_GRID_SIZE_2;
+    float *bottom_grid = right_grid + RAW_GRID_SIZE_2;
     float *back_grid   = bottom_grid + RAW_GRID_SIZE_2;
+    float *left_grid   = back_grid + RAW_GRID_SIZE_2;
+
+//    front_grid = led_grid;
+//        top_grid = led_grid      + RAW_GRID_SIZE_2;
+//        right_grid = top_grid    + RAW_GRID_SIZE_2;
+//        bottom_grid = right_grid + RAW_GRID_SIZE_2;
+//        back_grid = bottom_grid  + RAW_GRID_SIZE_2;
+//        left_grid = back_grid    + RAW_GRID_SIZE_2;
+
+    // Flipping these
+//    float *temp = bottom_grid;
+//    bottom_grid = right_grid;
+//    right_grid = temp;
 
 		// Looping through the 3x3 Grid
 		for (int j = 0; j < 9; j++)

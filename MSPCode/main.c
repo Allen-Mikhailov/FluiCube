@@ -121,6 +121,8 @@ int main(void)
     InitializeGPIO();
     Initialize_LED_SPI();
 
+    delay_cycles(1600000);
+
     NVIC_EnableIRQ(SPI1_INT_IRQn);
     Initialize_ACCEL_SPI();
 
